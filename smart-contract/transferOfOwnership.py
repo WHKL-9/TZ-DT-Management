@@ -105,7 +105,7 @@ def test():
     TESLA = sp.test_account("tesla")
     CONTI = sp.test_account("conti")
 
-    scenario.show([ADMIN, ANOTHER_ADMIN, BMW, TESLA, CONTI])
+    scenario.show([ADMIN, SECOND_ADMIN, BMW, TESLA, CONTI])
 
     token_contract = Token(FA2.FA2_config(non_fungible=True), admin=ADMIN.address, metadata=sp.utils.metadata_of_url(
         "ipfs://QmRYy8Mq576hPsLHMy7WQdEWvRo2NoHhGVj89dE1n4dAKg"))
