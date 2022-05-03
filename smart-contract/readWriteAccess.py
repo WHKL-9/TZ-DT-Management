@@ -25,7 +25,7 @@ class Certification(sp.Contract):
 
 @sp.add_test(name="Certify_test")
 def test():
-    Tesla = sp.test_account("Tesla")
+    TESLA = sp.test_account("Tesla")
     BMW = sp.test_account("BMW")
 
     contract = Certification(certifier=sp.address(

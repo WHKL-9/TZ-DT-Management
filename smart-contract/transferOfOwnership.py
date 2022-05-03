@@ -13,6 +13,11 @@ class Token(FA2.FA2):
 # Transfering XTZ from contract to account. i.e. Collecting management rewards
 # Updating admin
 
+# Example
+# admin - Envited Marketplace
+# buyer - BMW
+# seller - repair shop center
+
 
 class Marketplace(sp.Contract):
     def __init__(self, token, metadata, admin):
@@ -27,8 +32,7 @@ class Marketplace(sp.Contract):
 
     @sp.entry_point
     def mint(self, params):
-        # the value of nft in our case could be >= 0
-        sp.verify((params.amount >= 0))
+        sp.verify((params.amount > 0))
         # Cast an address to a typed contract​
         contract = sp.contract(
             sp.TRecord(
@@ -63,7 +67,7 @@ class Marketplace(sp.Contract):
     @sp.entry_point
     def collect(self, params):
         # to verify amount of transaction is equal to cost of nft
-        # to verify the nft was on sale
+        # to verify the nft was on sale -- colleactable - True
         sp.verify(((sp.amount == sp.utils.nat_to_mutez(self.data.data[params.token_id].amount)) & (self.data.data[params.token_id].amount != 0) & (
             self.data.data[params.token_id].collectable == True) & (self.data.data[params.token_id].author != sp.sender)))
         self.data.data[params.token_id].collectable = False
@@ -96,7 +100,7 @@ def test():
     scenario = sp.test_scenario()
 
     ADMIN = sp.test_account("admin")
-    ANOTHER_ADMIN = sp.test_account("another admin")
+    SECOND_ADMIN = sp.test_account("second admin")
     BMW = sp.test_account("bmw")
     TESLA = sp.test_account("tesla")
     CONTI = sp.test_account("conti")
@@ -115,7 +119,7 @@ def test():
     scenario.h1("Mint")
 
     # test to mint without admin access for marketplace
-    scenario += marketplace.mint(sp.record(amount=100000000, metadata=sp.pack(
+    scenario += marketplace.mint(sp.record(amount=10, metadata=sp.pack(
         "ipfs://QmbQDdDejtN9BVsF6p51xg8LR5csn2uGqbgqWhZAvgeae5/test_data.json"))).run(sender=ADMIN, valid=False)
 
     # add admin access for marketplace
@@ -123,7 +127,7 @@ def test():
         marketplace.address).run(sender=ADMIN)
     scenario += marketplace.mint(sp.record(amount=10, metadata=sp.pack(
         "ipfs://QmbQDdDejtN9BVsF6p51xg8LR5csn2uGqbgqWhZAvgeae5/test_data.json"))).run(sender=ADMIN)
-    scenario += marketplace.mint(sp.record(amount=5600000,
+    scenario += marketplace.mint(sp.record(amount=10,
                                            metadata=sp.pack("123423"))).run(sender=BMW)
     # collect nft
     scenario.h1("Collect")
@@ -132,4 +136,4 @@ def test():
 
     # update admin
     scenario += marketplace.update_admin(
-        (ANOTHER_ADMIN.address)).run(sender=ADMIN)
+        (SECOND_ADMIN.address)).run(sender=ADMIN)
