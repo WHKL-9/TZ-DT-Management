@@ -13,7 +13,6 @@ class Token(FA2.FA2):
 # Transfering XTZ from contract to account. i.e. Collecting management rewards
 # Updating admin
 
-Example
 # admin - Envited Marketplace
 # buyer - BMW
 # seller - repair shop center
@@ -137,3 +136,5 @@ def test():
     # update admin
     scenario += marketplace.update_admin(
         (SECOND_ADMIN.address)).run(sender=ADMIN)
+
+    
